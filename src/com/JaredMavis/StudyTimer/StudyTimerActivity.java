@@ -2,7 +2,6 @@ package com.JaredMavis.StudyTimer;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
@@ -11,6 +10,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -30,6 +30,7 @@ public class StudyTimerActivity extends Activity {
 	private Part timer;
 
 	private Session session;
+	private ProgressBar progressBar;
 
     /** Called when the activity is first created. */
     @Override
@@ -48,6 +49,10 @@ public class StudyTimerActivity extends Activity {
 
 		startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(startButtonListener());
+
+		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+		progressBar.setMax(2*60);
+		TRACE("ProgressBar Max = " + Integer.toString(progressBar.getMax()));
     }
 
     private View.OnClickListener startButtonListener(){
@@ -92,10 +97,12 @@ public class StudyTimerActivity extends Activity {
 
     public class Part extends CountDownTimer {
 		String type;
+		int seconds;
 
 		Part(long startTime, long interval, String _type)
 		{
 			super(startTime, interval);
+			seconds = (int) (startTime/1000);
 			type = _type;
 		}
 
@@ -111,7 +118,6 @@ public class StudyTimerActivity extends Activity {
 
 		@Override
 		public void onTick(long millisTillFinished) {
-			TRACE("Tick");
 			long minutes = TimeUnit.MILLISECONDS.toSeconds(millisTillFinished)/60;
 			String text = String.format("%d min, %d sec",
 					minutes,
@@ -120,6 +126,9 @@ public class StudyTimerActivity extends Activity {
 				);
 
 			timeDisplay.setText(text);
+			progressBar.setProgress(1+progressBar.getProgress());
+
+			TRACE("ProgressBar Progress = "  + Integer.toString(progressBar.getProgress()));
 		}
 	}
 
@@ -148,6 +157,7 @@ public class StudyTimerActivity extends Activity {
     		isGoing = false;
 			timeDisplay.setVisibility(View.INVISIBLE);
 			startButton.setText("Start");
+			statusDisplay.setText("Welcome to Study Timer");
     	}
 
     	public void next(){
@@ -157,6 +167,17 @@ public class StudyTimerActivity extends Activity {
     		} else {
     			stop();
     		}
+    	}
+
+    	public int calcTotalSeconds(){
+    		Iterator<Part> iterator = sessionParts.iterator();
+    		int total = 0;
+
+    		while (iterator.hasNext()){
+    			total += iterator.next().seconds;
+    		}
+
+    		return (total);
     	}
     }
 
