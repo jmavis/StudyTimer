@@ -56,7 +56,8 @@ public class StudyTimerActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (session.isGoing) {
-
+					session.stop();
+					startButton.setText("Start");
 				} else {
 					session.start();
 					startButton.setText("Stop");
@@ -110,6 +111,7 @@ public class StudyTimerActivity extends Activity {
 
 		@Override
 		public void onTick(long millisTillFinished) {
+			TRACE("Tick");
 			long minutes = TimeUnit.MILLISECONDS.toSeconds(millisTillFinished)/60;
 			String text = String.format("%d min, %d sec",
 					minutes,
@@ -123,7 +125,8 @@ public class StudyTimerActivity extends Activity {
 
     public class Session {
     	LinkedList<Part> sessionParts;
-    	Iterator<Part> current;
+    	Iterator<Part> itor;
+    	Part current;
     	boolean isGoing;
 
     	Session(){
@@ -131,21 +134,28 @@ public class StudyTimerActivity extends Activity {
     		sessionParts = new LinkedList<Part>();
     		sessionParts.add(new StudySession());
     		sessionParts.add(new ShortBreak());
-    		current = sessionParts.iterator();
+    		itor = sessionParts.iterator();
     	}
 
     	public void start(){
     		isGoing = true;
     		next();
+    		timeDisplay.setVisibility(View.VISIBLE);
+    	}
+
+    	public void stop(){
+    		current.cancel();
+    		isGoing = false;
+			timeDisplay.setVisibility(View.INVISIBLE);
+			startButton.setText("Start");
     	}
 
     	public void next(){
-    		if (current.hasNext()) {
-    			current.next().startPart();
+    		if (itor.hasNext()) {
+    			current = itor.next();
+    			current.startPart();
     		} else {
-    			isGoing = false;
-    			timeDisplay.setVisibility(View.INVISIBLE);
-    			startButton.setText("Start");
+    			stop();
     		}
     	}
     }
