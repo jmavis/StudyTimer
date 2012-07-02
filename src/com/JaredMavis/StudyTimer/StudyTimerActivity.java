@@ -26,9 +26,6 @@ public class StudyTimerActivity extends Activity {
 	// break in minutes
 	private int timePerLongBreakSession; // in minutes
 	private Button startButton;
-
-	private Part timer;
-
 	private Session session;
 	private ProgressBar progressBar;
 
@@ -50,7 +47,7 @@ public class StudyTimerActivity extends Activity {
 		startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(startButtonListener());
 
-		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setMax(2*60);
 		TRACE("ProgressBar Max = " + Integer.toString(progressBar.getMax()));
     }
@@ -150,6 +147,7 @@ public class StudyTimerActivity extends Activity {
     		isGoing = true;
     		next();
     		timeDisplay.setVisibility(View.VISIBLE);
+    		progressBar.setVisibility(View.VISIBLE);
     	}
 
     	public void stop(){
@@ -158,6 +156,7 @@ public class StudyTimerActivity extends Activity {
 			timeDisplay.setVisibility(View.INVISIBLE);
 			startButton.setText("Start");
 			statusDisplay.setText("Welcome to Study Timer");
+			progressBar.setVisibility(View.INVISIBLE);
     	}
 
     	public void next(){

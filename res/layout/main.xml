@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<TextView
-				android:id="@+id/SessionTitle"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="Welcome to Study Timer" />
-		<TextView
-				android:text=""
-				android:id="@+id/TimeLeftInSession"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"></TextView>
 		<Button
-				android:text="Start"
+				android:layout_height="wrap_content"
 				android:id="@+id/startButton"
+				android:text="Start"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"></Button>
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:layout_marginBottom="170dp"></Button>
 		<ProgressBar
+				android:id="@+id/progressBar"
+				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:id="@+id/progressBar1"
 				style="?android:attr/progressBarStyleHorizontal"
-				android:layout_height="wrap_content"></ProgressBar>
+				android:layout_above="@+id/startButton"
+				android:layout_alignRight="@+id/startButton"
+				android:layout_marginBottom="53dp"
+				android:visibility="invisible"></ProgressBar>
+		<TextView
+				android:layout_height="wrap_content"
+				android:id="@+id/SessionTitle"
+				android:text="Welcome to Study Timer"
+				android:layout_width="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="20dp"></TextView>
+		<TextView
+				android:layout_height="wrap_content"
+				android:id="@+id/TimeLeftInSession"
+				android:text=""
+				android:layout_width="wrap_content"
+				android:layout_above="@+id/progressBar"
+				android:layout_centerHorizontal="true"
+				android:layout_marginBottom="23dp"></TextView>
 
-</LinearLayout>
+</RelativeLayout>
