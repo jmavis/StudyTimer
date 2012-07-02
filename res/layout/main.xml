@@ -7,8 +7,7 @@
 		<TextView
 				android:id="@+id/SessionTitle"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/hello" />
+				android:layout_height="wrap_content"/>
 		<TextView
 				android:text="TextView"
 				android:id="@+id/TimeLeftInSession"
