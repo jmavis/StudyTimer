@@ -8,6 +8,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -26,6 +29,7 @@ public class StudyTimerActivity extends Activity {
 	// break in minutes
 	private int timePerLongBreakSession; // in minutes
 	private Button startButton;
+	private Button pauseButton;
 	private Session session;
 	private ProgressBar progressBar;
 
@@ -47,8 +51,11 @@ public class StudyTimerActivity extends Activity {
 		startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(startButtonListener());
 
+		pauseButton = (Button) findViewById(R.id.pauseButton);
+		pauseButton.setOnClickListener(pauseButtonListener());
+
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setMax(2*60);
+		progressBar.setMax(session.calcTotalSeconds());
 		TRACE("ProgressBar Max = " + Integer.toString(progressBar.getMax()));
     }
 
@@ -68,6 +75,35 @@ public class StudyTimerActivity extends Activity {
 		};
 
 		return listener;
+    }
+
+    private View.OnClickListener pauseButtonListener(){
+    	View.OnClickListener listener = new View.OnClickListener() {
+    		@Override
+    		public void onClick(View v){
+
+    		}
+    	};
+
+    	return listener;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.menu, menu);
+    	return (true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()){
+    		case R.id.edit:
+    			break;
+    		default:
+
+    	}
+    	return super.onOptionsItemSelected(item);
     }
 
     public int MinToMilli(int mins){
@@ -95,12 +131,14 @@ public class StudyTimerActivity extends Activity {
     public class Part extends CountDownTimer {
 		String type;
 		int seconds;
+		Boolean isPaused;
 
 		Part(long startTime, long interval, String _type)
 		{
 			super(startTime, interval);
 			seconds = (int) (startTime/1000);
 			type = _type;
+			isPaused = false;
 		}
 
 		public void startPart(){
@@ -116,16 +154,22 @@ public class StudyTimerActivity extends Activity {
 		@Override
 		public void onTick(long millisTillFinished) {
 			long minutes = TimeUnit.MILLISECONDS.toSeconds(millisTillFinished)/60;
-			String text = String.format("%d min, %d sec",
-					minutes,
-				    TimeUnit.MILLISECONDS.toSeconds(millisTillFinished) -
-				    minutes * 60
-				);
-
+			String text;
+			if (minutes != 0) {
+				text = String.format("%d min, %d sec",
+						minutes,
+					    TimeUnit.MILLISECONDS.toSeconds(millisTillFinished) -
+					    minutes * 60
+					);
+			} else{
+				text = String.format("%d sec",
+					    TimeUnit.MILLISECONDS.toSeconds(millisTillFinished) -
+					    minutes * 60
+					);
+			}
 			timeDisplay.setText(text);
 			progressBar.setProgress(1+progressBar.getProgress());
-
-			TRACE("ProgressBar Progress = "  + Integer.toString(progressBar.getProgress()));
+			TRACE("Tick");
 		}
 	}
 
@@ -157,6 +201,10 @@ public class StudyTimerActivity extends Activity {
 			startButton.setText("Start");
 			statusDisplay.setText("Welcome to Study Timer");
 			progressBar.setVisibility(View.INVISIBLE);
+    	}
+
+    	public void pause(){
+    		current.isPaused = true;
     	}
 
     	public void next(){

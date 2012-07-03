@@ -37,5 +37,13 @@
 				android:layout_above="@+id/progressBar"
 				android:layout_centerHorizontal="true"
 				android:layout_marginBottom="23dp"></TextView>
-
+		<Button
+				android:layout_height="wrap_content"
+				android:id="@+id/pauseButton"
+				android:text="Pause"
+				android:layout_width="wrap_content"
+				android:layout_alignTop="@+id/startButton"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="82dp"
+				android:visibility="invisible"></Button>
 </RelativeLayout>
