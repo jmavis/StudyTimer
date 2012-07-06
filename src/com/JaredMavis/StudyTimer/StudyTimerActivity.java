@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,7 +33,7 @@ public class StudyTimerActivity extends Activity {
 	private Button startButton;
 	private Button pauseButton;
 	private Session session;
-	private ProgressBar progressBar;
+	private LinearLayout progressBars;
 
     /** Called when the activity is first created. */
     @Override
@@ -46,7 +48,7 @@ public class StudyTimerActivity extends Activity {
 		timePerBreakSession = 1;
 		timePerLongBreakSession = 30;
 
-		session = new Session();
+
 
 		startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(startButtonListener());
@@ -54,9 +56,9 @@ public class StudyTimerActivity extends Activity {
 		pauseButton = (Button) findViewById(R.id.pauseButton);
 		pauseButton.setOnClickListener(pauseButtonListener());
 
-		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setMax(session.calcTotalSeconds());
-		TRACE("ProgressBar Max = " + Integer.toString(progressBar.getMax()));
+		progressBars = (LinearLayout) findViewById(R.id.progressBars);
+
+		session = new Session();
     }
 
     private View.OnClickListener startButtonListener(){
@@ -111,20 +113,59 @@ public class StudyTimerActivity extends Activity {
 	}
 
 	public class StudySession extends Part {
-		StudySession(){
-			super(MinToMilli(timePerStudySession), ClockUpdateInterval, "Study");
+		ProgressBar bar;
+
+		StudySession(ProgressBar _bar){
+			super(MinToMilli(timePerStudySession), ClockUpdateInterval, "Study", _bar);
+			long millis = MinToMilli(timePerStudySession);
+
+			bar = _bar;
+
+			bar.setMax((int) millis/1000);
+		}
+
+		@Override
+		public void onTick(long millisTillFinished) {
+			super.onTick(millisTillFinished);
+			bar.setProgress(1+bar.getProgress());
 		}
 	}
 
 	public class ShortBreak extends Part {
-		ShortBreak(){
-			super(MinToMilli(timePerBreakSession), ClockUpdateInterval, "Break");
+		ProgressBar bar;
+
+		ShortBreak(ProgressBar _bar){
+			super(MinToMilli(timePerBreakSession), ClockUpdateInterval, "Break", _bar);
+			long millis = MinToMilli(timePerStudySession);
+
+			bar = _bar;
+
+			bar.setMax((int) millis/1000);
+		}
+
+		@Override
+		public void onTick(long millisTillFinished) {
+			super.onTick(millisTillFinished);
+			bar.setProgress(1+bar.getProgress());
 		}
 	}
 
 	public class LongBreak extends Part {
-		LongBreak(){
-			super(MinToMilli(timePerLongBreakSession), ClockUpdateInterval, "Break");
+		ProgressBar bar;
+
+		LongBreak(ProgressBar _bar){
+			super(MinToMilli(timePerLongBreakSession), ClockUpdateInterval, "Break", _bar);
+			long millis = MinToMilli(timePerStudySession);
+
+
+			bar.setMax((int) millis/60);
+			bar.setBackgroundColor(Color.BLUE);
+		}
+
+		@Override
+		public void onTick(long millisTillFinished) {
+			super.onTick(millisTillFinished);
+			bar.setProgress(1+bar.getProgress());
 		}
 	}
 
@@ -132,13 +173,15 @@ public class StudyTimerActivity extends Activity {
 		String type;
 		int seconds;
 		Boolean isPaused;
+		ProgressBar bar;
 
-		Part(long startTime, long interval, String _type)
+		Part(long startTime, long interval, String _type, ProgressBar _bar)
 		{
 			super(startTime, interval);
 			seconds = (int) (startTime/1000);
 			type = _type;
 			isPaused = false;
+			bar = _bar;
 		}
 
 		public void startPart(){
@@ -168,8 +211,6 @@ public class StudyTimerActivity extends Activity {
 					);
 			}
 			timeDisplay.setText(text);
-			progressBar.setProgress(1+progressBar.getProgress());
-			TRACE("Tick");
 		}
 	}
 
@@ -182,8 +223,15 @@ public class StudyTimerActivity extends Activity {
     	Session(){
     		isGoing = false;
     		sessionParts = new LinkedList<Part>();
-    		sessionParts.add(new StudySession());
-    		sessionParts.add(new ShortBreak());
+
+    		ProgressBar bar1 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
+    		ProgressBar bar2 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
+
+    		progressBars.addView(bar1);
+    		progressBars.addView(bar2);
+
+    		sessionParts.add(new StudySession(bar1));
+    		sessionParts.add(new ShortBreak(bar2));
     		itor = sessionParts.iterator();
     	}
 
@@ -191,7 +239,7 @@ public class StudyTimerActivity extends Activity {
     		isGoing = true;
     		next();
     		timeDisplay.setVisibility(View.VISIBLE);
-    		progressBar.setVisibility(View.VISIBLE);
+    		progressBars.setVisibility(View.VISIBLE);
     	}
 
     	public void stop(){
@@ -200,7 +248,7 @@ public class StudyTimerActivity extends Activity {
 			timeDisplay.setVisibility(View.INVISIBLE);
 			startButton.setText("Start");
 			statusDisplay.setText("Welcome to Study Timer");
-			progressBar.setVisibility(View.INVISIBLE);
+			progressBars.setVisibility(View.INVISIBLE);
     	}
 
     	public void pause(){
