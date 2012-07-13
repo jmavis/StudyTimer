@@ -22,6 +22,7 @@ import android.widget.TextView;
 public class StudyTimerActivity extends Activity {
 	private static final String TAG = "StudyTimerActivity";
 	private final int ClockUpdateInterval = 1000; // ms
+	private final int study = 0, shortBreak = 1, longBreak = 2;
 
 	private TextView statusDisplay;
 	private TextView timeDisplay;
@@ -34,6 +35,7 @@ public class StudyTimerActivity extends Activity {
 	private Button pauseButton;
 	private Session session;
 	private LinearLayout progressBars;
+	private PartFactory partFactory;
 
     /** Called when the activity is first created. */
     @Override
@@ -215,20 +217,10 @@ public class StudyTimerActivity extends Activity {
     		isGoing = false;
     		sessionParts = new LinkedList<Part>();
 
-    		ProgressBar bar1 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
-    		ProgressBar bar2 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
-    		ProgressBar bar3 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
-    		ProgressBar bar4 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
-
-    		progressBars.addView(bar1);
-    		progressBars.addView(bar2);
-    		progressBars.addView(bar3);
-    		progressBars.addView(bar4);
-
-    		sessionParts.add(new StudySession(bar1));
-    		sessionParts.add(new ShortBreak(bar2));
-    		sessionParts.add(new StudySession(bar3));
-    		sessionParts.add(new LongBreak(bar4));
+    		sessionParts.add(partFactory.makePart(study));
+    		sessionParts.add(partFactory.makePart(shortBreak));
+    		sessionParts.add(partFactory.makePart(study));
+    		sessionParts.add(partFactory.makePart(longBreak));
     		itor = sessionParts.iterator();
     	}
 
@@ -273,6 +265,30 @@ public class StudyTimerActivity extends Activity {
     	}
     }
 
+    public class PartFactory{
+    	PartFactory(){
+    		
+    	}
+    	
+    	Part makePart(int type) {
+    		ProgressBar bar = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
+    		progressBars.addView(bar);
+    		
+    		switch (type) {
+				case study:
+					return (new StudySession(bar));
+				case shortBreak:
+					return (new ShortBreak(bar));
+				case longBreak:
+					return (new LongBreak(bar));
+				default:
+					Log.e(TAG, Integer.toString(type) + ": no type matching has been set.");
+					return (null);
+					
+    		}
+    	}
+    }
+    
 	void TRACE(String msg) {
 		Log.d(TAG, msg);
 	}
