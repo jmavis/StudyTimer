@@ -44,11 +44,9 @@ public class StudyTimerActivity extends Activity {
         statusDisplay = (TextView) findViewById(R.id.SessionTitle);
 		timeDisplay = (TextView) findViewById(R.id.TimeLeftInSession);
 
-		timePerStudySession = 1;
-		timePerBreakSession = 1;
-		timePerLongBreakSession = 30;
-
-
+		timePerStudySession = 25;
+		timePerBreakSession = 5;
+		timePerLongBreakSession = 35;
 
 		startButton = (Button) findViewById(R.id.startButton);
 		startButton.setOnClickListener(startButtonListener());
@@ -113,8 +111,6 @@ public class StudyTimerActivity extends Activity {
 	}
 
 	public class StudySession extends Part {
-		ProgressBar bar;
-
 		StudySession(ProgressBar _bar){
 			super(MinToMilli(timePerStudySession), ClockUpdateInterval, "Study", _bar);
 			long millis = MinToMilli(timePerStudySession);
@@ -132,8 +128,6 @@ public class StudyTimerActivity extends Activity {
 	}
 
 	public class ShortBreak extends Part {
-		ProgressBar bar;
-
 		ShortBreak(ProgressBar _bar){
 			super(MinToMilli(timePerBreakSession), ClockUpdateInterval, "Break", _bar);
 			long millis = MinToMilli(timePerStudySession);
@@ -151,15 +145,12 @@ public class StudyTimerActivity extends Activity {
 	}
 
 	public class LongBreak extends Part {
-		ProgressBar bar;
-
 		LongBreak(ProgressBar _bar){
 			super(MinToMilli(timePerLongBreakSession), ClockUpdateInterval, "Break", _bar);
 			long millis = MinToMilli(timePerStudySession);
 
 
 			bar.setMax((int) millis/60);
-			bar.setBackgroundColor(Color.BLUE);
 		}
 
 		@Override
@@ -226,12 +217,18 @@ public class StudyTimerActivity extends Activity {
 
     		ProgressBar bar1 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
     		ProgressBar bar2 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
+    		ProgressBar bar3 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
+    		ProgressBar bar4 = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
 
     		progressBars.addView(bar1);
     		progressBars.addView(bar2);
+    		progressBars.addView(bar3);
+    		progressBars.addView(bar4);
 
     		sessionParts.add(new StudySession(bar1));
     		sessionParts.add(new ShortBreak(bar2));
+    		sessionParts.add(new StudySession(bar3));
+    		sessionParts.add(new LongBreak(bar4));
     		itor = sessionParts.iterator();
     	}
 

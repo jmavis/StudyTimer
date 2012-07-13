@@ -47,12 +47,11 @@
 				android:layout_marginTop="82dp"
 				android:visibility="invisible"></Button>
 		<LinearLayout
-				android:id="@+id/progressBars"
-				android:orientation="vertical"
 				android:layout_height="wrap_content"
+				android:orientation="vertical"
 				android:layout_width="wrap_content"
-				android:layout_alignBottom="@+id/TimeLeftInSession"
-				android:layout_toRightOf="@+id/SessionTitle">
-
-		</LinearLayout>
+				android:id="@+id/progressBars"
+				android:layout_marginTop= "50dp"
+				android:layout_alignParentRight="true"
+				android:layout_marginRight="20dp"></LinearLayout>
 </RelativeLayout>
