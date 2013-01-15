@@ -1,57 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-		<Button
-				android:layout_height="wrap_content"
-				android:id="@+id/startButton"
-				android:text="Start"
-				android:layout_width="wrap_content"
-				android:layout_alignParentBottom="true"
-				android:layout_centerHorizontal="true"
-				android:layout_marginBottom="170dp"></Button>
-		<ProgressBar
-				android:id="@+id/progressBar"
-				android:layout_height="wrap_content"
-				android:layout_width="wrap_content"
-				style="?android:attr/progressBarStyleHorizontal"
-				android:layout_above="@+id/startButton"
-				android:layout_alignRight="@+id/startButton"
-				android:layout_marginBottom="53dp"
-				android:visibility="invisible"></ProgressBar>
-		<TextView
-				android:layout_height="wrap_content"
-				android:id="@+id/SessionTitle"
-				android:text="Welcome to Study Timer"
-				android:layout_width="wrap_content"
-				android:layout_alignParentTop="true"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="20dp"></TextView>
-		<TextView
-				android:layout_height="wrap_content"
-				android:id="@+id/TimeLeftInSession"
-				android:text=""
-				android:layout_width="wrap_content"
-				android:layout_above="@+id/progressBar"
-				android:layout_centerHorizontal="true"
-				android:layout_marginBottom="23dp"></TextView>
-		<Button
-				android:layout_height="wrap_content"
-				android:id="@+id/pauseButton"
-				android:text="Pause"
-				android:layout_width="wrap_content"
-				android:layout_alignTop="@+id/startButton"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="82dp"
-				android:visibility="invisible"></Button>
-		<LinearLayout
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:layout_width="wrap_content"
-				android:id="@+id/progressBars"
-				android:layout_marginTop= "50dp"
-				android:layout_alignParentRight="true"
-				android:layout_marginRight="20dp"></LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="170dp"
+        android:text="Start" >
+    </Button>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startButton"
+        android:layout_alignRight="@+id/startButton"
+        android:layout_marginBottom="53dp"
+        android:visibility="invisible" >
+    </ProgressBar>
+
+    <TextView
+        android:id="@+id/SessionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Welcome to Study Timer" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/TimeLeftInSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:text="" >
+    </TextView>
+
+    <Button
+        android:id="@+id/pauseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/startButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:text="Pause"
+        android:visibility="invisible" >
+    </Button>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:minWidth="200dip"
+        android:progress="0"
+        android:visibility="invisible" />
+
 </RelativeLayout>

@@ -34,7 +34,7 @@ public class StudyTimerActivity extends Activity {
 	private Button startButton;
 	private Button pauseButton;
 	private Session session;
-	private LinearLayout progressBars;
+	private ProgressBar progressBar;
 	private PartFactory partFactory;
 
     /** Called when the activity is first created. */
@@ -56,15 +56,14 @@ public class StudyTimerActivity extends Activity {
 		pauseButton = (Button) findViewById(R.id.pauseButton);
 		pauseButton.setOnClickListener(pauseButtonListener());
 
-		progressBars = (LinearLayout) findViewById(R.id.progressBars);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		partFactory = new PartFactory();
 
 		session = new Session();
     }
 
     private View.OnClickListener startButtonListener(){
     	View.OnClickListener listener = new View.OnClickListener() {
-
-			@Override
 			public void onClick(View v) {
 				if (session.isGoing) {
 					session.stop();
@@ -81,7 +80,6 @@ public class StudyTimerActivity extends Activity {
 
     private View.OnClickListener pauseButtonListener(){
     	View.OnClickListener listener = new View.OnClickListener() {
-    		@Override
     		public void onClick(View v){
 
     		}
@@ -228,7 +226,7 @@ public class StudyTimerActivity extends Activity {
     		isGoing = true;
     		next();
     		timeDisplay.setVisibility(View.VISIBLE);
-    		progressBars.setVisibility(View.VISIBLE);
+    		progressBar.setVisibility(View.VISIBLE);
     	}
 
     	public void stop(){
@@ -237,7 +235,8 @@ public class StudyTimerActivity extends Activity {
 			timeDisplay.setVisibility(View.INVISIBLE);
 			startButton.setText("Start");
 			statusDisplay.setText("Welcome to Study Timer");
-			progressBars.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.INVISIBLE);
+			itor = sessionParts.iterator();
     	}
 
     	public void pause(){
@@ -271,20 +270,16 @@ public class StudyTimerActivity extends Activity {
     	}
     	
     	Part makePart(int type) {
-    		ProgressBar bar = new ProgressBar(getBaseContext(), null, android.R.attr.progressBarStyleHorizontal);
-    		progressBars.addView(bar);
-    		
     		switch (type) {
 				case study:
-					return (new StudySession(bar));
+					return (new StudySession(progressBar));
 				case shortBreak:
-					return (new ShortBreak(bar));
+					return (new ShortBreak(progressBar));
 				case longBreak:
-					return (new LongBreak(bar));
+					return (new LongBreak(progressBar));
 				default:
 					Log.e(TAG, Integer.toString(type) + ": no type matching has been set.");
 					return (null);
-					
     		}
     	}
     }
